@@ -202,7 +202,6 @@ export default function DonatePage() {
               </div>
             )}
 
-            {/* STEP 3: Contact & Address */}
             {step === 3 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -240,7 +239,6 @@ export default function DonatePage() {
               </div>
             )}
 
-            {/* Navigation Buttons */}
             <div className="flex gap-4 pt-6 border-t border-white/10 mt-10">
               {step > 1 && (
                 <button

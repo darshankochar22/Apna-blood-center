@@ -30,14 +30,20 @@ export async function insertDonor(
     const db = getAdminClient();
     const donor_code = await generateDonorCode(db);
 
+    const payload: any = {
+        ...formData,
+        donor_code,
+        source,
+        status: "pending",
+    };
+
+    if (payload.date_of_wedding === "") {
+        payload.date_of_wedding = null;
+    }
+
     const { data, error } = await db
         .from("donors")
-        .insert({
-           ...formData,
-           donor_code,
-           source,
-           status: "pending",
-        })
+        .insert(payload)
         .select()
         .single();
 

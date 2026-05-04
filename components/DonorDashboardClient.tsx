@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Donor, DonorStatus, BLOOD_GROUPS } from "@/types/donor";
-import { fetchDonorsAction, updateDonorAction, fetchStatsAction } from "@/app/actions";
+import { fetchDonorsAction, updateDonorAction, fetchStatsAction, sendBirthdayEmailAction } from "@/app/actions";
 import { format } from "date-fns";
 import { User, Activity, FileText, CheckCircle, Clock, XCircle, Search, Droplet, Heart, ChevronRight, X } from "lucide-react";
 import { Field, Input, Toggle, Select } from "./Formelements";
@@ -25,6 +25,11 @@ export default function DonorDashboardClient() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
+  
+  // Advanced Filters
+  const [filterBloodGroup, setFilterBloodGroup] = useState("");
+  const [filterGender, setFilterGender] = useState("");
+  const [filterDonationType, setFilterDonationType] = useState("");
 
   useEffect(() => {
     loadData();
@@ -44,7 +49,10 @@ export default function DonorDashboardClient() {
   const filteredDonors = donors.filter(
     (d) => {
       let matchesStatus = true;
-      if (statusFilter === "approved") {
+      if (statusFilter === "birthdays") {
+        if (!d.dob) return false;
+        matchesStatus = true; // Show everyone, just sorted
+      } else if (statusFilter === "approved") {
         matchesStatus = d.status === "approved" || d.status === "donated";
       } else if (statusFilter) {
         matchesStatus = d.status === statusFilter;
@@ -53,9 +61,27 @@ export default function DonorDashboardClient() {
       const matchesSearch = d.full_name.toLowerCase().includes(search.toLowerCase()) ||
                             d.donor_code.toLowerCase().includes(search.toLowerCase()) ||
                             d.phone.includes(search);
-      return matchesStatus && matchesSearch;
+                            
+      const matchesBG = filterBloodGroup ? d.blood_group === filterBloodGroup : true;
+      const matchesGender = filterGender ? d.gender === filterGender : true;
+      const matchesDonationType = filterDonationType ? d.type_of_donation === filterDonationType : true;
+
+      return matchesStatus && matchesSearch && matchesBG && matchesGender && matchesDonationType;
     }
-  );
+  ).sort((a, b) => {
+      if (statusFilter === "birthdays") {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const getDays = (dateStr: string) => {
+              const d = new Date(dateStr);
+              d.setFullYear(today.getFullYear());
+              if (d < today) d.setFullYear(today.getFullYear() + 1);
+              return Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          };
+          return getDays(a.dob) - getDays(b.dob);
+      }
+      return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
+  });
 
   async function handleStatusUpdate(id: string, newStatus: DonorStatus, extraUpdates: Partial<Donor> = {}) {
     const res = await updateDonorAction(id, { status: newStatus, ...extraUpdates });
@@ -65,6 +91,22 @@ export default function DonorDashboardClient() {
       loadData(); // Refresh stats
     } else {
       alert("Error: " + res.error);
+    }
+  }
+
+  const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
+
+  async function handleSendBirthday(e: React.MouseEvent, id: string) {
+    e.stopPropagation();
+    if(confirm("Send automated birthday invitation to this donor?")) {
+      setSendingEmailId(id);
+      const res = await sendBirthdayEmailAction(id);
+      setSendingEmailId(null);
+      if(res.success) {
+        alert("Birthday invitation sent successfully!");
+      } else {
+        alert("Failed: " + res.error);
+      }
     }
   }
 
@@ -107,6 +149,49 @@ export default function DonorDashboardClient() {
           </div>
         </div>
 
+        {/* FILTERS BAR */}
+        <div className="px-5 pb-5 border-b border-white/5 flex items-center gap-4 flex-wrap">
+            <select 
+              value={filterBloodGroup}
+              onChange={e => setFilterBloodGroup(e.target.value)}
+              className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none text-white/70 focus:text-white appearance-none cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <option value="">All Blood Groups</option>
+              {BLOOD_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+            </select>
+
+            <select 
+              value={filterGender}
+              onChange={e => setFilterGender(e.target.value)}
+              className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none text-white/70 focus:text-white appearance-none cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <option value="">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <select 
+              value={filterDonationType}
+              onChange={e => setFilterDonationType(e.target.value)}
+              className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none text-white/70 focus:text-white appearance-none cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <option value="">All Donation Types</option>
+              <option value="Whole Blood">Whole Blood</option>
+              <option value="SDP (Platelets)">SDP (Platelets)</option>
+              <option value="FFP (Plasma)">FFP (Plasma)</option>
+            </select>
+
+            {(filterBloodGroup || filterGender || filterDonationType) && (
+              <button 
+                onClick={() => { setFilterBloodGroup(""); setFilterGender(""); setFilterDonationType(""); }}
+                className="text-xs font-bold uppercase tracking-wider text-white/40 hover:text-white transition-colors ml-2"
+              >
+                Clear Filters
+              </button>
+            )}
+        </div>
+
         <div className="flex-1 overflow-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-[#0a0a0a] text-white/50 sticky top-0 uppercase text-xs tracking-wider">
@@ -134,11 +219,25 @@ export default function DonorDashboardClient() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-white/60">{donor.phone}</td>
-                  <td className="px-6 py-4 text-white/50">{format(new Date(donor.created_at || new Date()), "dd MMM yyyy")}</td>
+                  <td className="px-6 py-4 text-white/50">
+                    {statusFilter === "birthdays" 
+                      ? format(new Date(donor.dob!), "dd MMM") 
+                      : format(new Date(donor.created_at || new Date()), "dd MMM yyyy")}
+                  </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${statusColors[donor.status]}`}>
-                      {donor.status}
-                    </span>
+                    {statusFilter === "birthdays" ? (
+                      <button 
+                        onClick={(e) => handleSendBirthday(e, donor.id)}
+                        disabled={sendingEmailId === donor.id}
+                        className="px-4 py-1.5 bg-white hover:bg-gray-200 text-black text-[11px] font-bold uppercase tracking-wider rounded-full transition-colors disabled:opacity-50"
+                      >
+                        {sendingEmailId === donor.id ? "Sending..." : "Send Invite"}
+                      </button>
+                    ) : (
+                      <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${statusColors[donor.status]}`}>
+                        {donor.status}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

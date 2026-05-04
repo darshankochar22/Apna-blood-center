@@ -10,6 +10,7 @@ const navItem = [
     {label: "Verified Donors", href:"/?status=verified" },
     {label: "Accepted Donors", href:"/?status=approved" },
     {label: "Rejected Donors", href:"/?status=rejected" },
+    {label: "Upcoming Birthdays", href:"/?status=birthdays" },
     {label: "New Form (QR)", href:"/donate" },
 ];
 

@@ -10,37 +10,37 @@ export async function sendThankYouEmail(donor: Donor) {
   }
 
   const htmlContent = `
-    <div style="font-family: Arial, sans-serif; max-w-2xl mx-auto p-8 bg-black text-white border border-gray-800 rounded-3xl">
+    <div style="font-family: Arial, sans-serif; max-width: 42rem; margin: 0 auto; padding: 32px; background-color: #f8f9fa; color: #111; border: 1px solid #eaeaea; border-radius: 24px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: white; font-size: 28px; margin-bottom: 10px;">Apna Blood Center</h1>
-        <p style="color: #888; font-size: 16px;">Certificate of Blood Donation</p>
+        <h1 style="color: #000; font-size: 28px; margin-bottom: 10px;">Apna Blood Center</h1>
+        <p style="color: #666; font-size: 16px;">Certificate of Blood Donation</p>
       </div>
       
-      <div style="background-color: #111; padding: 30px; rounded-2xl; border: 1px solid #333;">
-        <p style="font-size: 18px; color: white; margin-bottom: 20px;">Dear <strong>${donor.full_name}</strong>,</p>
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <p style="font-size: 18px; color: #111; margin-bottom: 20px;">Dear <strong>${donor.full_name}</strong>,</p>
         
-        <p style="font-size: 16px; color: #ccc; line-height: 1.6; margin-bottom: 20px;">
+        <p style="font-size: 16px; color: #444; line-height: 1.6; margin-bottom: 20px;">
           Thank you for your generous blood donation. Your selfless act today has the power to save lives and bring hope to those in critical need.
         </p>
 
-        <div style="background-color: #000; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 10px 0; color: #888; border-bottom: 1px solid #222;">Donor ID</td>
-              <td style="padding: 10px 0; color: white; font-family: monospace; text-align: right; border-bottom: 1px solid #222;">${donor.donor_code}</td>
+              <td style="padding: 10px 0; color: #666; border-bottom: 1px solid #e5e7eb;">Donor ID</td>
+              <td style="padding: 10px 0; color: #111; font-family: monospace; text-align: right; border-bottom: 1px solid #e5e7eb;">${donor.donor_code}</td>
             </tr>
             <tr>
-              <td style="padding: 10px 0; color: #888; border-bottom: 1px solid #222;">Blood Group</td>
-              <td style="padding: 10px 0; color: white; font-weight: bold; text-align: right; border-bottom: 1px solid #222;">${donor.blood_group}</td>
+              <td style="padding: 10px 0; color: #666; border-bottom: 1px solid #e5e7eb;">Blood Group</td>
+              <td style="padding: 10px 0; color: #111; font-weight: bold; text-align: right; border-bottom: 1px solid #e5e7eb;">${donor.blood_group}</td>
             </tr>
             <tr>
-              <td style="padding: 10px 0; color: #888;">Date</td>
-              <td style="padding: 10px 0; color: white; text-align: right;">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+              <td style="padding: 10px 0; color: #666;">Date</td>
+              <td style="padding: 10px 0; color: #111; text-align: right;">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
             </tr>
           </table>
         </div>
 
-        <p style="font-size: 14px; color: #888; text-align: center; margin-top: 30px;">
+        <p style="font-size: 14px; color: #666; text-align: center; margin-top: 30px;">
           "A single drop of blood can make a huge difference."<br/>
           Thank you from the team at Apna Blood Center.
         </p>
@@ -72,21 +72,21 @@ export async function sendBirthdayEmail(donor: Donor) {
   }
 
   const htmlContent = `
-    <div style="font-family: Arial, sans-serif; max-w-2xl mx-auto p-8 bg-black text-white border border-gray-800 rounded-3xl">
+    <div style="font-family: Arial, sans-serif; max-width: 42rem; margin: 0 auto; padding: 32px; background-color: #f8f9fa; color: #111; border: 1px solid #eaeaea; border-radius: 24px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: white; font-size: 28px; margin-bottom: 10px;">Apna Blood Center</h1>
+        <h1 style="color: #000; font-size: 28px; margin-bottom: 10px;">Apna Blood Center</h1>
       </div>
       
-      <div style="background-color: #111; padding: 30px; rounded-2xl; border: 1px solid #333;">
-        <p style="font-size: 18px; color: white; margin-bottom: 20px;">Dear <strong>${donor.full_name}</strong>,</p>
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <p style="font-size: 18px; color: #111; margin-bottom: 20px;">Dear <strong>${donor.full_name}</strong>,</p>
         
-        <p style="font-size: 16px; color: #ccc; line-height: 1.6; margin-bottom: 20px;">
+        <p style="font-size: 16px; color: #444; line-height: 1.6; margin-bottom: 20px;">
           Wishing you a very Happy Birthday in advance! 🎉<br/><br/>
           As you celebrate another wonderful year, we want to remind you that your blood donation is the greatest gift of life.
           We would love to invite you to donate blood this year and make your birthday even more special by saving a life.
         </p>
 
-        <p style="font-size: 14px; color: #888; text-align: center; margin-top: 30px;">
+        <p style="font-size: 14px; color: #666; text-align: center; margin-top: 30px;">
           "A single drop of blood can make a huge difference."<br/>
           Best wishes from the team at Apna Blood Center.
         </p>

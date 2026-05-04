@@ -1,0 +1,44 @@
+app/donate/page.tsx(46,5): error TS2322: Type 'Resolver<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; tattoo_or_piercing: boolean; ... 12 more ...; address_line2?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }>' is not assignable to type 'ResolverOptions<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; tattoo_or_piercing: boolean; ... 12 more ...; address_line2?: string | undefined; }>'.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+app/donate/page.tsx(77,25): error TS2345: Argument of type '{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'DonorFormData'.
+  Types of property 'blood_group' are incompatible.
+    Type 'string' is not assignable to type 'BloodGroup'.
+app/donate/page.tsx(123,40): error TS2345: Argument of type '(data: DonorFormValues) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }': full_name, phone, email, dob, and 18 more.
+app/donate/page.tsx(242,25): error TS2322: Type 'Literal' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+hooks/useDonorForm.ts(20,5): error TS2322: Type 'Resolver<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; tattoo_or_piercing: boolean; ... 12 more ...; address_line2?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; medical_conditions: string; ... 12 more ...; last_donation_date?: string | ... 1 more ... | undefined; }>' is not assignable to type 'ResolverOptions<{ full_name: string; phone: string; email: string; dob: string; age: number; gender: "male" | "female" | "other"; blood_group: string; weight_kg: number; has_donated_before: boolean; tattoo_or_piercing: boolean; ... 12 more ...; address_line2?: string | undefined; }>'.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+lib/validation.ts(18,15): error TS2353: Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidType<unknown>> | undefined; message?: string | undefined; }'.
+lib/validation.ts(21,13): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: readonly ["male", "female", "other"], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type 'string[]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type 'string[]'.
+lib/validation.ts(28,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: [string, ...string[]], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type '[string, ...string[]]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type '[string, ...string[]]'.
+lib/validation.ts(33,15): error TS2353: Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidType<unknown>> | undefined; message?: string | undefined; }'.
+lib/validation.ts(42,18): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: readonly Literal[], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodLiteral<...>', gave the following error.
+    Argument of type 'boolean' is not assignable to parameter of type 'readonly Literal[]'.
+  Overload 2 of 2, '(value: true, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodLiteral<...>', gave the following error.
+    Object literal may only specify known properties, and 'errorMap' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+lib/validation.ts(51,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: [string, ...string[]], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'required_error' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type '[string, ...string[]]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type '[string, ...string[]]'.

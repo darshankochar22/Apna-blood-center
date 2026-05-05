@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Blood Bank CRM",
 };
 
+import { ThemeProvider } from "../components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,17 +30,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="h-full bg-[#0f1117] text-white">
-      <AuthProvider>
-        <div className="flex h-screen">
-          <div className="w-full h-full overflow-y-auto">
-            <AppShell>{children}</AppShell>
-          </div>
-
-        </div>
-      </AuthProvider>
+      <body className="h-full bg-white text-black dark:bg-[#0f1117] dark:text-white transition-colors duration-200">
+        <ThemeProvider attribute="class" defaultTheme="light">
+          <AuthProvider>
+            <div className="flex h-screen">
+              <div className="w-full h-full overflow-y-auto">
+                <AppShell>{children}</AppShell>
+              </div>
+            </div>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

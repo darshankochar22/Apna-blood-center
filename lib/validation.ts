@@ -19,6 +19,7 @@ export const step1Schema = z.object({
 export const step2Schema = z.object({
   total_donations: z.number().min(0, "Invalid number").default(0),
   total_apheresis_donations: z.number().min(0, "Invalid number").default(0),
+  vein_suitable_for_sdp: z.boolean().optional().default(false),
 });
 
 export const step3Schema = z.object({
@@ -36,6 +37,6 @@ export type DonorFormValues = z.infer<typeof donorFullSchema>;
 
 export const STEP_FIELDS: Record<number, (keyof DonorFormValues)[]> = {
   1: ["full_name", "father_name", "dob", "age", "date_of_wedding", "gender", "blood_group", "occupation"],
-  2: ["total_donations", "total_apheresis_donations"],
+  2: ["total_donations", "total_apheresis_donations", "vein_suitable_for_sdp"],
   3: ["phone", "whatsapp_no", "email", "address", "pincode", "signature"],
 };

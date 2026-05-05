@@ -1,6 +1,6 @@
 
 export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-export type DonorStatus = "pending" | "verified" | "approved" | "rejected" | "donated";
+export type DonorStatus = "pending" | "verified" | "approved" | "rejected" | "donated" | "issued";
 export type Gender = "male" | "female" | "other";
 export type DoctorSource = "qr" | "direct" | "admin";
 
@@ -35,6 +35,7 @@ export interface Donor extends DonorFormData{
     blood_group: BloodGroup;
     status: DonorStatus;
     created_at?: string;
+    deleted_at?: string | null;
 
     // Verification
     type_of_donor?: string | null;
@@ -48,6 +49,10 @@ export interface Donor extends DonorFormData{
     temperature?: number | null;
     weight?: number | null;
     height?: number | null;
+
+    // Donation Room
+    blood_bag_no?: string | null;
+    segment_no?: string | null;
 
     // Test Reports
     test_hiv?: boolean | null;

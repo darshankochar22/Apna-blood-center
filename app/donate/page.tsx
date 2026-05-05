@@ -190,7 +190,7 @@ export default function DonatePage() {
             {step === 2 && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <Field label="Total Donations" error={errors.total_donations}>
+                  <Field label="Total Previous Donations" error={errors.total_donations}>
                     <Input {...register("total_donations", { valueAsNumber: true })} type="number" min="0" error={!!errors.total_donations} />
                   </Field>
                   <Field label="Total Apheresis Donations" error={errors.total_apheresis_donations}>
@@ -198,7 +198,20 @@ export default function DonatePage() {
                   </Field>
                 </div>
 
-
+                <div className="bg-[#1a1a1a] rounded-2xl p-5">
+                  <Controller
+                    name="vein_suitable_for_sdp"
+                    control={control}
+                    render={({ field }) => (
+                      <Toggle
+                        label="Is vein suitable for SDP (Apheresis)?"
+                        description="Self-assess before the donation — staff will confirm on arrival"
+                        checked={!!field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </div>
               </div>
             )}
 

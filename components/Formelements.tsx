@@ -3,8 +3,6 @@
 import React from "react";
 import { type FieldError } from "react-hook-form";
 
-// ─── Field Wrapper ────────────────────────────────────────────────────────────
-
 interface FieldProps {
   label: string;
   required?: boolean;

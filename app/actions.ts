@@ -1,7 +1,6 @@
 "use server";
-
 import { Donor, DonorStatus, DonorFormData } from "@/types/donor";
-import { getDonors, updateDonor, getDonorStats, insertDonor } from "@/lib/supabase";
+import { getDonors, updateDonor, getDonorStats, insertDonor, softDeleteDonor, restoreDonor, permanentDeleteDonor } from "@/lib/supabase";
 import { sendThankYouEmail, sendBirthdayEmail } from "@/lib/email";
 import { sendThankYouSMS } from "@/lib/sms";
 
@@ -17,8 +16,6 @@ export async function fetchDonorsAction() {
 export async function updateDonorAction(id: string, updates: Partial<Donor>) {
     try {
         const updated = await updateDonor(id, updates);
-        
-        // Trigger automated email and SMS when a donation is successfully marked as donated
         if (updates.status === "donated") {
             if (updated.email) {
                 await sendThankYouEmail(updated);
@@ -47,6 +44,42 @@ export async function createDonorAction(donorData: DonorFormData) {
     try {
         const newDonor = await insertDonor(donorData, "direct");
         return { success: true, data: newDonor };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function fetchBinDonorsAction() {
+    try {
+        const donors = await getDonors(true);
+        return { success: true, data: donors };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function softDeleteDonorAction(id: string) {
+    try {
+        await softDeleteDonor(id);
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function restoreDonorAction(id: string) {
+    try {
+        const donor = await restoreDonor(id);
+        return { success: true, data: donor };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function permanentDeleteDonorAction(id: string) {
+    try {
+        await permanentDeleteDonor(id);
+        return { success: true };
     } catch (e: any) {
         return { success: false, error: e.message };
     }

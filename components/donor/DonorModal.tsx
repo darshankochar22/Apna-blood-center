@@ -373,15 +373,6 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
                   <Field label="Segment No."><Input value={segmentNo} onChange={e => setSegmentNo(e.target.value)} placeholder="e.g. SEG-001" className="bg-[#222] text-white" /></Field>
                 </div>
 
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mt-8 mb-3">Rapid Test Results</p>
-                <div className="space-y-4">
-                  <ReportToggle label="HIV" checked={testHiv} onChange={setTestHiv} />
-                  <ReportToggle label="HBsAg (Hepatitis B)" checked={testHbsag} onChange={setTestHbsag} />
-                  <ReportToggle label="HCV (Hepatitis C)" checked={testHcv} onChange={setTestHcv} />
-                  <ReportToggle label="VDRL (Syphilis)" checked={testVdrl} onChange={setTestVdrl} />
-                  <ReportToggle label="Malaria" checked={testMalaria} onChange={setTestMalaria} />
-                </div>
-
                 <div className="flex gap-4 pt-6">
                   <button onClick={handleReject} disabled={saving} className="flex-1 py-4 bg-[#222] hover:bg-[#333] text-white font-bold rounded-xl transition">Reject</button>
                   <button onClick={handleComplete} disabled={saving} className="flex-2 py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition shadow-lg shadow-white/10 text-lg">Complete &amp; Issue</button>

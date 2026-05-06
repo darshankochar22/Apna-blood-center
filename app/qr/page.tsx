@@ -5,12 +5,9 @@ import QRCode from "react-qr-code";
 import { Smartphone, Copy, ExternalLink, RefreshCw } from "lucide-react";
 
 export default function QRPage() {
-  const [formUrl, setFormUrl] = useState("");
-  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    setFormUrl("https://blood-bank-rho-ten.vercel.app/donate");
-  }, []);
+  const [copied, setCopied] = useState(false);
+  const formUrl = "https://blood-bank-rho-ten.vercel.app/donate";
 
   function handleCopy() {
     navigator.clipboard.writeText(formUrl);

@@ -9,7 +9,7 @@ export default function QRPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setFormUrl(`${window.location.origin}/donate`);
+    setFormUrl("https://blood-bank-rho-ten.vercel.app/donate");
   }, []);
 
   function handleCopy() {

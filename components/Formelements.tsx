@@ -6,7 +6,7 @@ import { type FieldError } from "react-hook-form";
 interface FieldProps {
   label: string;
   required?: boolean;
-  error?: FieldError;
+  error?: FieldError | string;
   hint?: string;
   children: React.ReactNode;
   className?: string;
@@ -24,10 +24,10 @@ export function Field({ label, required, error, hint, children, className }: Fie
         <p className="text-[11px] text-white/40">{hint}</p>
       )}
       {error && (
-        <p className="text-[12px] text-white flex items-center gap-1 font-medium">
-          <span>⚠</span> {error.message}
-        </p>
-      )}
+      <p className="text-[12px] text-white flex items-center gap-1 font-medium">
+        <span>⚠</span> {typeof error === "string" ? error : error.message}
+      </p>
+     )}
     </div>
   );
 }

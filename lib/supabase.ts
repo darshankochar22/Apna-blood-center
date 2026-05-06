@@ -109,13 +109,13 @@ export async function getDonorStats(){
     });
 
     const statusCounts: Record<string, number> = {};
-    (allStatuses.data ?? []).forEach(({ status }: { status: string }) => {
-        statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-    });
+    ('data' in allStatuses && allStatuses.data ? allStatuses.data : []).forEach(({ status }: { status: string }) => {
+    statusCounts[status] = (statusCounts[status] ?? 0) + 1;
+   });
 
     const groupCounts: Record<string, number> = {};
-    (bloodGroups.data ?? []).forEach(({ blood_group }: { blood_group: string }) => {
-        groupCounts[blood_group] = (groupCounts[blood_group] ?? 0) + 1;
+    ('data' in bloodGroups && bloodGroups.data ? bloodGroups.data : []).forEach(({ blood_group }: { blood_group: string }) => {
+    groupCounts[blood_group] = (groupCounts[blood_group] ?? 0) + 1;
     });
 
     return {

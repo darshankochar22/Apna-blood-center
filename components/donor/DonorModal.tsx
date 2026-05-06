@@ -335,7 +335,6 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
                 </div>
                 <div className="flex gap-4 pt-2">
                   <button onClick={handleReject} disabled={saving} className="flex-1 py-4 bg-[#222] hover:bg-[#333] text-white font-bold rounded-xl transition">Reject</button>
-                  <button onClick={handleProceed} disabled={saving} className="flex-2 py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition shadow-lg shadow-white/10 text-lg">Proceed to Donation Room</button>
                 </div>
               </>
             )}

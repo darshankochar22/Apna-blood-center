@@ -24,55 +24,55 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f1f3f7] px-4 py-8">
-      <div className="w-full max-w-md rounded-xl border border-[#dfe3ea] bg-white px-7 py-8 shadow-[0_16px_40px_rgba(20,27,45,0.08)]">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] px-4 py-8">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] px-7 py-8 shadow-[0_24px_60px_rgba(0,0,0,0.6)]">
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-[#e8ebf1] bg-white">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white">
             <Image src="/logo.png" alt="Apna Blood Centre" width={54} height={54} priority />
           </div>
-          <h1 className="text-[22px] font-semibold text-[#233248]">Login to Admin Panel</h1>
-          <p className="mt-2 text-[12px] font-semibold tracking-[0.08em] text-[#8590a3]">
+          <h1 className="text-[22px] font-semibold text-white">Login to Admin Panel</h1>
+          <p className="mt-2 text-[12px] font-semibold tracking-[0.08em] text-white/40">
             LOGIN WITH EMAIL
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[#30425e]">Email Address</label>
+            <label className="mb-1.5 block text-sm font-medium text-white/60">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@bloodcenter.in"
               required
-              className="w-full rounded-md border border-[#d5dbe5] px-3.5 py-2.5 text-sm text-[#243550] outline-none transition focus:border-[#7f8da3] focus:ring-2 focus:ring-[#e8edf5]"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none transition focus:border-white/30 focus:bg-white/8 focus:ring-1 focus:ring-white/20"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[#30425e]">Password</label>
+            <label className="mb-1.5 block text-sm font-medium text-white/60">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               required
-              className="w-full rounded-md border border-[#d5dbe5] px-3.5 py-2.5 text-sm text-[#243550] outline-none transition focus:border-[#7f8da3] focus:ring-2 focus:ring-[#e8edf5]"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/20 outline-none transition focus:border-white/30 focus:bg-white/8 focus:ring-1 focus:ring-white/20"
             />
           </div>
 
-          <label className="flex items-center gap-2 pt-0.5 text-sm text-[#51607a]">
+          <label className="flex items-center gap-2 pt-0.5 text-sm text-white/40 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 rounded border-[#c7cfdd] text-[#2f4f84] focus:ring-[#2f4f84]"
+              className="h-4 w-4 rounded border-white/20 bg-white/10 text-white focus:ring-white/20"
             />
             Remember Me
           </label>
 
           {error && (
-            <p className="rounded-md border border-[#f4c7ca] bg-[#fff4f5] px-3 py-2 text-xs text-[#a24049]">
+            <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
               {error}
             </p>
           )}
@@ -80,7 +80,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-[#2f4f84] py-2.5 text-sm font-semibold text-white transition hover:bg-[#284575] disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-lg bg-white py-2.5 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {loading ? "Logging In..." : "Log In"}
           </button>

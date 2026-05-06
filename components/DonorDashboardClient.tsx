@@ -5,14 +5,20 @@ import { useSearchParams } from "next/navigation";
 import { Donor, DonorStatus } from "@/types/donor";
 import {
   fetchDonorsAction, updateDonorAction, fetchStatsAction,
-  sendBirthdayEmailAction, fetchBinDonorsAction,
+  sendBirthdayEmailAction, sendAnniversaryEmailAction, fetchBinDonorsAction,
   softDeleteDonorAction, restoreDonorAction, permanentDeleteDonorAction,
 } from "@/app/actions";
 import { User, Activity, FileText, CheckCircle, Clock, XCircle, Droplet, Heart } from "lucide-react";
 import { StatCard } from "./donor/StatCard";
-import { StatusTabs } from "./donor/StatusTabs";
 import { DonorTable } from "./donor/DonorTable";
 import { DonorModal } from "./donor/DonorModal";
+import { ProcessModal } from "./donor/ProcessModal";
+import { AcceptedProcessModal } from "./donor/AcceptedProcessModal";
+import { TestResultsModal } from "./donor/TestResultsModal";
+import { IssueModal, IssueFormData } from "./donor/IssueModal";
+import { downloadCertificate } from "@/lib/downloadCertificate";
+import { downloadTestReport } from "@/lib/downloadTestReport";
+import { downloadIssueSlip } from "@/lib/downloadIssueSlip";
 
 export default function DonorDashboardClient() {
   const searchParams = useSearchParams();
@@ -25,7 +31,12 @@ export default function DonorDashboardClient() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
+  const [processDonor, setProcessDonor] = useState<Donor | null>(null);
+  const [acceptedProcessDonor, setAcceptedProcessDonor] = useState<Donor | null>(null);
+  const [testResultsDonor, setTestResultsDonor] = useState<Donor | null>(null);
+  const [issueModalDonor, setIssueModalDonor]   = useState<Donor | null>(null);
   const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
+  const [sendingAnnivEmailId, setSendingAnnivEmailId] = useState<string | null>(null);
 
   const [filterBloodGroup, setFilterBloodGroup] = useState("");
   const [filterGender, setFilterGender] = useState("");
@@ -55,6 +66,40 @@ export default function DonorDashboardClient() {
       loadData();
     } else {
       alert("Error: " + res.error);
+    }
+  }
+
+  async function handleProcess(
+    id: string,
+    decision: "approved" | "rejected",
+    data: Partial<Donor>
+  ) {
+    const res = await updateDonorAction(id, { status: decision, ...data });
+    if (res.success) { setProcessDonor(null); loadData(); }
+    else alert("Error: " + res.error);
+  }
+
+  async function handleAcceptedProcess(id: string, data: Partial<Donor>) {
+    const res = await updateDonorAction(id, { status: "donated", ...data });
+    if (res.success) { setAcceptedProcessDonor(null); loadData(); }
+    else alert("Error: " + res.error);
+  }
+
+  async function handleTestResults(id: string, data: Partial<Donor>) {
+    const res = await updateDonorAction(id, { status: "issued", ...data });
+    if (res.success) { setTestResultsDonor(null); loadData(); }
+    else alert("Error: " + res.error);
+  }
+
+  async function handleIssueSubmit(id: string, data: Partial<Donor>, formData: IssueFormData) {
+    const res = await updateDonorAction(id, { status: "completed", ...data });
+    if (res.success) {
+      const updatedDonor = { ...(issueModalDonor as Donor), status: "completed" as DonorStatus, ...data };
+      setIssueModalDonor(null);
+      loadData();
+      downloadIssueSlip(updatedDonor, formData);
+    } else {
+      alert("Error saving issue record: " + res.error);
     }
   }
 
@@ -94,11 +139,23 @@ export default function DonorDashboardClient() {
     else alert("Failed: " + res.error);
   }
 
+  async function handleSendAnniversary(e: React.MouseEvent, id: string) {
+    e.stopPropagation();
+    if (!confirm("Send anniversary wishes email to this donor?")) return;
+    setSendingAnnivEmailId(id);
+    const res = await sendAnniversaryEmailAction(id);
+    setSendingAnnivEmailId(null);
+    if (res.success) alert("Anniversary email sent successfully!");
+    else alert("Failed: " + res.error);
+  }
+
   const filteredDonors = donors.filter(d => {
     if (isBinTab) return false;
     let matchesStatus = true;
     if (statusFilter === "birthdays") {
       if (!d.dob) return false;
+    } else if (statusFilter === "anniversaries") {
+      if (!d.date_of_wedding) return false;
     } else if (statusFilter) {
       matchesStatus = d.status === statusFilter;
     }
@@ -111,20 +168,19 @@ export default function DonorDashboardClient() {
     const matchesDonationType = filterDonationType ? d.type_of_donation === filterDonationType : true;
     return matchesStatus && matchesSearch && matchesBG && matchesGender && matchesDonationType;
   }).sort((a, b) => {
-    if (statusFilter === "birthdays") {
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const getDays = (s: string) => {
-        const d = new Date(s); d.setFullYear(today.getFullYear());
-        if (d < today) d.setFullYear(today.getFullYear() + 1);
-        return Math.ceil((d.getTime() - today.getTime()) / 86400000);
-      };
-      return getDays(a.dob) - getDays(b.dob);
-    }
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const getDaysUntil = (dateStr: string) => {
+      const d = new Date(dateStr); d.setFullYear(today.getFullYear());
+      if (d < today) d.setFullYear(today.getFullYear() + 1);
+      return Math.ceil((d.getTime() - today.getTime()) / 86400000);
+    };
+    if (statusFilter === "birthdays") return getDaysUntil(a.dob) - getDaysUntil(b.dob);
+    if (statusFilter === "anniversaries") return getDaysUntil(a.date_of_wedding!) - getDaysUntil(b.date_of_wedding!);
     return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
   });
 
   return (
-    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 bg-gray-50 dark:bg-black min-h-screen text-black dark:text-white transition-colors duration-200">
+    <div className="p-4 sm:p-6 space-y-8 bg-gray-50 dark:bg-black min-h-screen text-black dark:text-white transition-colors duration-200">
 
       {/* Stats */}
       <div>
@@ -147,9 +203,6 @@ export default function DonorDashboardClient() {
         )}
       </div>
 
-      {/* Tabs */}
-      <StatusTabs statusFilter={statusFilter} stats={stats} />
-
       {/* Table */}
       <DonorTable
         donors={donors}
@@ -166,20 +219,64 @@ export default function DonorDashboardClient() {
         setFilterDonationType={setFilterDonationType}
         filteredDonors={filteredDonors}
         sendingEmailId={sendingEmailId}
+        sendingAnnivEmailId={sendingAnnivEmailId}
         onRowClick={setSelectedDonor}
+        onProcess={setProcessDonor}
+        onAcceptedProcess={setAcceptedProcessDonor}
+        onTestResults={setTestResultsDonor}
+        onDownloadCert={downloadCertificate}
         onDelete={handleDelete}
         onRestore={handleRestore}
         onPermanentDelete={handlePermanentDelete}
         onSendBirthday={handleSendBirthday}
+        onSendAnniversary={handleSendAnniversary}
+        onIssueSlip={setIssueModalDonor}
+        onDownloadTestReport={downloadTestReport}
       />
 
-      {/* Modal */}
+      {/* Detail Modal */}
       {selectedDonor && (
         <DonorModal
           donor={selectedDonor}
           onClose={() => setSelectedDonor(null)}
           onUpdate={handleStatusUpdate}
           onDelete={handleDelete}
+        />
+      )}
+
+      {/* Process Modal (Verified → Accept/Reject with medical form) */}
+      {processDonor && (
+        <ProcessModal
+          donor={processDonor}
+          onClose={() => setProcessDonor(null)}
+          onSubmit={handleProcess}
+        />
+      )}
+
+      {/* Accepted Process Modal (Accepted → Donated) */}
+      {acceptedProcessDonor && (
+        <AcceptedProcessModal
+          donor={acceptedProcessDonor}
+          onClose={() => setAcceptedProcessDonor(null)}
+          onSubmit={handleAcceptedProcess}
+        />
+      )}
+
+      {/* Test Results Modal (Donated → Issued) */}
+      {testResultsDonor && (
+        <TestResultsModal
+          donor={testResultsDonor}
+          onClose={() => setTestResultsDonor(null)}
+          onSubmit={handleTestResults}
+        />
+      )}
+
+      {/* Issue Modal (Issued — fill patient/transfusion details + print slip) */}
+      {issueModalDonor && (
+        <IssueModal
+          donor={issueModalDonor}
+          onClose={() => setIssueModalDonor(null)}
+          onSubmit={handleIssueSubmit}
         />
       )}
     </div>

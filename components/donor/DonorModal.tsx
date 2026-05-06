@@ -8,22 +8,24 @@ import { Field, Input, Toggle, Select } from "@/components/Formelements";
 import { StepIcon, ReportToggle, Section, InfoItem, TestResult } from "./ModalHelpers";
 
 const STAGE_LEVEL: Record<DonorStatus, number> = {
-  pending:  0,
-  verified: 1,
-  approved: 2,
-  donated:  3,
-  issued:   4,
-  rejected: 99,
+  pending:   0,
+  verified:  1,
+  approved:  2,
+  donated:   3,
+  issued:    4,
+  completed: 5,
+  rejected:  99,
 };
 
 function DonorInfoSections({ donor }: { donor: Donor }) {
   const level = STAGE_LEVEL[donor.status] ?? 0;
-  const isRejected = donor.status === "rejected";
+  const isRejected  = donor.status === "rejected";
 
   const showVerification = level >= 1 || (isRejected && !!donor.type_of_donor);
   const showMedical      = level >= 4 || (isRejected && donor.hemoglobin != null);
   const showDonationRoom = level >= 4 || (isRejected && (!!donor.blood_bag_no || !!donor.segment_no));
   const showLabTests     = level >= 4 || (isRejected && donor.test_hiv != null);
+  const showIssueRecord  = level >= 5;
 
   return (
     <>
@@ -76,6 +78,7 @@ function DonorInfoSections({ donor }: { donor: Donor }) {
 
       {showDonationRoom && (
         <Section title="Donation Room">
+          <InfoItem label="Unit No."      value={donor.unit_no      || "-"} />
           <InfoItem label="Blood Bag No." value={donor.blood_bag_no || "-"} />
           <InfoItem label="Segment No."   value={donor.segment_no   || "-"} />
         </Section>
@@ -83,11 +86,25 @@ function DonorInfoSections({ donor }: { donor: Donor }) {
 
       {showLabTests && (
         <Section title="Lab Test Results">
+          <InfoItem label="Test Method" value={donor.test_method || "-"} />
           <TestResult label="HIV"                 value={donor.test_hiv} />
           <TestResult label="HBsAg (Hepatitis B)" value={donor.test_hbsag} />
           <TestResult label="HCV (Hepatitis C)"   value={donor.test_hcv} />
           <TestResult label="VDRL (Syphilis)"     value={donor.test_vdrl} />
           <TestResult label="Malaria"             value={donor.test_malaria} />
+        </Section>
+      )}
+
+      {showIssueRecord && (
+        <Section title="Issue Record">
+          <InfoItem label="Patient Name"          value={donor.patient_name       || "-"} />
+          <InfoItem label="Patient City"          value={donor.patient_city       || "-"} />
+          <InfoItem label="Attender Name"         value={donor.attender_name      || "-"} />
+          <InfoItem label="Attender Contact"      value={donor.attender_contact   || "-"} />
+          <InfoItem label="Reason for Transfusion" value={donor.transfusion_reason || "-"} />
+          <InfoItem label="Hospital"              value={donor.hospital           || "-"} />
+          <InfoItem label="Amount Received"       value={donor.amount_received    || "-"} />
+          <InfoItem label="Issued On"             value={donor.issued_at ? format(new Date(donor.issued_at), "dd MMM yyyy, hh:mm a") : "-"} />
         </Section>
       )}
     </>
@@ -162,10 +179,6 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
       return;
     }
     await onUpdate(donor.id, "verified", { type_of_donor: typeOfDonor, type_of_donation: typeOfDonation });
-  });
-
-  const handleAccept = () => wrap(async () => {
-    await onUpdate(donor.id, "approved");
   });
 
   const handleProceed = () => wrap(async () => {
@@ -256,10 +269,11 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
           <div className="flex items-center justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#333] -z-10" />
             <StepIcon active={true} label="Form Filled" />
-            <StepIcon active={["verified","approved","donated","issued"].includes(donor.status)} label="Verified" />
-            <StepIcon active={["approved","donated","issued"].includes(donor.status)} label="Accepted" />
-            <StepIcon active={["donated","issued"].includes(donor.status)} label="Donated" />
-            <StepIcon active={donor.status === "issued"} label="Issued" />
+            <StepIcon active={["verified","approved","donated","issued","completed"].includes(donor.status)} label="Verified" />
+            <StepIcon active={["approved","donated","issued","completed"].includes(donor.status)} label="Accepted" />
+            <StepIcon active={["donated","issued","completed"].includes(donor.status)} label="Donated" />
+            <StepIcon active={["issued","completed"].includes(donor.status)} label="Tests OK" />
+            <StepIcon active={donor.status === "completed"} label="Issued" />
           </div>
 
           <div className="space-y-8">
@@ -298,21 +312,15 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
               </>
             )}
 
-            {/* STAGE 2 — Verified: intermediate confirmation, no form */}
+            {/* STAGE 2 — Verified: view only, processing done via Process button in table */}
             {donor.status === "verified" && (
-              <>
-                <div className="flex items-center gap-4 bg-[#1a1a1a] border border-white/10 rounded-2xl p-5">
-                  <CheckCircle className="w-8 h-8 text-green-400 shrink-0" />
-                  <div>
-                    <h3 className="text-base font-semibold text-white">Donor Verified</h3>
-                    <p className="text-sm text-white/50 mt-0.5">Verification details have been recorded. Accept this donor to proceed to the medical checkup stage.</p>
-                  </div>
+              <div className="flex items-center gap-4 bg-[#1a1a1a] border border-white/10 rounded-2xl p-5">
+                <CheckCircle className="w-8 h-8 text-green-400 shrink-0" />
+                <div>
+                  <h3 className="text-base font-semibold text-white">Donor Verified</h3>
+                  <p className="text-sm text-white/50 mt-0.5">To evaluate and accept or reject this donor, close this view and use the <strong className="text-white/70">Process</strong> button in the Verified table.</p>
                 </div>
-                <div className="flex gap-4 pt-2">
-                  <button onClick={handleReject} disabled={saving} className="flex-1 py-4 bg-[#222] hover:bg-[#333] text-white font-bold rounded-xl transition">Reject</button>
-                  <button onClick={handleAccept} disabled={saving} className="flex-2 py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition shadow-lg shadow-white/10 text-lg">Accept Donor</button>
-                </div>
-              </>
+              </div>
             )}
 
             {/* STAGE 3 — Accepted: intermediate confirmation, no form */}
@@ -382,17 +390,33 @@ export function DonorModal({ donor, onClose, onUpdate, onDelete }: DonorModalPro
               </>
             )}
 
-            {(donor.status === "issued" || donor.status === "rejected") && (
+            {donor.status === "issued" && (
               <div className="text-center py-6">
-                <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 ${donor.status === "issued" ? "bg-white text-black" : "bg-[#222] text-white/50"}`}>
-                  {donor.status === "issued" ? <CheckCircle className="w-10 h-10" /> : <XCircle className="w-10 h-10" />}
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 bg-white text-black">
+                  <CheckCircle className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {donor.status === "issued" ? "Blood Unit Issued" : "Donor Rejected"}
-                </h3>
-                <p className="text-white/40">
-                  {donor.status === "issued" ? "The donation cycle is fully complete." : "This donor has been rejected."}
-                </p>
+                <h3 className="text-xl font-bold text-white mb-2">Tests OK — Awaiting Issue</h3>
+                <p className="text-white/40">All lab tests passed. Go to Tests OK section and click <strong className="text-white/60">Issue</strong> to complete the record.</p>
+              </div>
+            )}
+
+            {donor.status === "completed" && (
+              <div className="text-center py-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 bg-emerald-500/20 text-emerald-400">
+                  <CheckCircle className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Blood Unit Issued ✓</h3>
+                <p className="text-white/40">The full donation journey is complete. All records are stored above.</p>
+              </div>
+            )}
+
+            {donor.status === "rejected" && (
+              <div className="text-center py-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 bg-[#222] text-white/50">
+                  <XCircle className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Donor Rejected</h3>
+                <p className="text-white/40">This donor has been rejected.</p>
               </div>
             )}
 

@@ -1,6 +1,6 @@
 
 export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-export type DonorStatus = "pending" | "verified" | "approved" | "rejected" | "donated" | "issued";
+export type DonorStatus = "pending" | "verified" | "approved" | "rejected" | "donated" | "issued" | "completed";
 export type Gender = "male" | "female" | "other";
 export type DoctorSource = "qr" | "direct" | "admin";
 
@@ -11,20 +11,25 @@ export interface DonorFormData {
     age: number;
     date_of_wedding: string;
     gender: Gender;
-    
+
     blood_group: BloodGroup;
     phone: string;
     whatsapp_no: string;
     email: string;
     occupation: string;
-    
+
     address: string;
+    area?: string;
+    city?: string;
+    state?: string;
     pincode: string;
-    
+
+    if_donated?: boolean | null;
+    previous_donation_date?: string | null;
     total_donations: number;
     total_apheresis_donations: number;
     vein_suitable_for_sdp?: boolean | null;
-    
+
     signature: string;
 }
 
@@ -36,6 +41,9 @@ export interface Donor extends DonorFormData{
     status: DonorStatus;
     created_at?: string;
     deleted_at?: string | null;
+
+    // Remark
+    remark?: string | null;
 
     // Verification
     type_of_donor?: string | null;
@@ -51,15 +59,27 @@ export interface Donor extends DonorFormData{
     height?: number | null;
 
     // Donation Room
+    unit_no?: string | null;
     blood_bag_no?: string | null;
     segment_no?: string | null;
 
     // Test Reports
+    test_method?: string | null;
     test_hiv?: boolean | null;
     test_hbsag?: boolean | null;
     test_hcv?: boolean | null;
     test_vdrl?: boolean | null;
     test_malaria?: boolean | null;
+
+    // Issue Record
+    patient_name?: string | null;
+    patient_city?: string | null;
+    attender_name?: string | null;
+    attender_contact?: string | null;
+    transfusion_reason?: string | null;
+    amount_received?: string | null;
+    hospital?: string | null;
+    issued_at?: string | null;
 }
 
 export interface ApiResponse<T = unknown> {

@@ -1,7 +1,7 @@
 "use server";
 import { Donor, DonorStatus, DonorFormData } from "@/types/donor";
 import { getDonors, updateDonor, getDonorStats, insertDonor, softDeleteDonor, restoreDonor, permanentDeleteDonor } from "@/lib/supabase";
-import { sendThankYouEmail, sendBirthdayEmail } from "@/lib/email";
+import { sendThankYouEmail, sendBirthdayEmail, sendAnniversaryEmail } from "@/lib/email";
 import { sendThankYouSMS } from "@/lib/sms";
 
 export async function fetchDonorsAction() {
@@ -79,6 +79,23 @@ export async function restoreDonorAction(id: string) {
 export async function permanentDeleteDonorAction(id: string) {
     try {
         await permanentDeleteDonor(id);
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function sendAnniversaryEmailAction(donorId: string) {
+    try {
+        const donors = await getDonors();
+        const donor = donors.find(d => d.id === donorId);
+
+        if (!donor) throw new Error("Donor not found");
+        if (!donor.email) throw new Error("This donor does not have an email address");
+
+        const res = await sendAnniversaryEmail(donor);
+        if (!res.success) throw new Error(res.error || "Failed to send email");
+
         return { success: true };
     } catch (e: any) {
         return { success: false, error: e.message };

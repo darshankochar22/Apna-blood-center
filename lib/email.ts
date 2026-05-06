@@ -66,6 +66,52 @@ export async function sendThankYouEmail(donor: Donor) {
   }
 }
 
+export async function sendAnniversaryEmail(donor: Donor) {
+  if (!donor.email) {
+    return { success: false, error: "No email provided for donor" };
+  }
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 42rem; margin: 0 auto; padding: 32px; background-color: #f8f9fa; color: #111; border: 1px solid #eaeaea; border-radius: 24px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 28px; margin-bottom: 10px;">Apna Blood Center</h1>
+      </div>
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <p style="font-size: 18px; color: #111; margin-bottom: 20px;">Dear <strong>${donor.full_name}</strong>,</p>
+        <p style="font-size: 16px; color: #444; line-height: 1.6; margin-bottom: 20px;">
+          Happy Wedding Anniversary! 💐<br/><br/>
+          On this special occasion, we at Apna Blood Center wish you and your family a lifetime of happiness and good health.
+          We also take this moment to remind you that blood donation is one of the most precious gifts you can offer.
+          Consider donating blood this anniversary and help save lives.
+        </p>
+        <p style="font-size: 14px; color: #666; text-align: center; margin-top: 30px;">
+          "Love gives life — so does blood donation."<br/>
+          Warm wishes from the team at Apna Blood Center.
+        </p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Apna Blood Center <onboarding@resend.dev>",
+      to: [donor.email],
+      subject: "Happy Anniversary! — Apna Blood Center",
+      html: htmlContent,
+    });
+
+    if (error) {
+      console.error("Failed to send anniversary email:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data };
+  } catch (error: any) {
+    console.error("Error sending anniversary email:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function sendBirthdayEmail(donor: Donor) {
   if (!donor.email) {
     return { success: false, error: "No email provided for donor" };

@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Apna Blood Center",
   description: "Blood Bank CRM",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 import { ThemeProvider } from "../components/ThemeProvider";

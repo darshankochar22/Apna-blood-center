@@ -13,9 +13,12 @@ const navItem = [
     { label: "Verified",           href: "/?status=verified" },
     { label: "Accepted",           href: "/?status=approved" },
     { label: "Donated",            href: "/?status=donated" },
-    { label: "Issued",             href: "/?status=issued" },
+    { label: "Tests OK",           href: "/?status=issued" },
+    { label: "Issued Records",     href: "/?status=completed" },
     { label: "Rejected",           href: "/?status=rejected" },
-    { label: "Upcoming Birthdays", href: "/?status=birthdays" },
+    { label: "Upcoming Birthdays",    href: "/?status=birthdays" },
+    { label: "Upcoming Anniversaries", href: "/?status=anniversaries" },
+    { label: "Bin",                    href: "/?status=bin" },
 ];
 
 export default function Sidebar(){

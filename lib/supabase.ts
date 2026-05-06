@@ -15,12 +15,23 @@ export function getAdminClient(): SupabaseClient {
 
 async function generateDonorCode(db: SupabaseClient): Promise<string> {
     const year = new Date().getFullYear();
-    const { count } = await db
-        .from("donors")
-        .select("*",{ count:"exact", head:true });
 
-    const seq = String((count ?? 0)+1).padStart(5,"0");
-    return `BB-${year}-${seq}`;
+    const { data } = await db
+        .from("donors")
+        .select("donor_code")
+        .like("donor_code", `BB-${year}-%`)
+        .order("donor_code", { ascending: false })
+        .limit(1)
+        .single();
+
+    let seq = 1;
+    if (data?.donor_code) {
+        const parts = data.donor_code.split("-");
+        const lastSeq = parseInt(parts[2], 10);
+        if (!isNaN(lastSeq)) seq = lastSeq + 1;
+    }
+
+    return `BB-${year}-${String(seq).padStart(5, "0")}`;
 }
 
 export async function insertDonor(
@@ -115,6 +126,7 @@ export async function getDonorStats(){
         approved: statusCounts["approved"] ?? 0,
         donated: statusCounts["donated"] ?? 0,
         issued: statusCounts["issued"] ?? 0,
+        completed: statusCounts["completed"] ?? 0,
         rejected: statusCounts["rejected"] ?? 0,
         bin: binCount.count ?? 0,
         bloodGroupBreakdown: groupCounts,

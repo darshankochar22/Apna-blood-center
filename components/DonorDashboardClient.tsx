@@ -182,27 +182,6 @@ export default function DonorDashboardClient() {
   return (
     <div className="p-4 sm:p-6 space-y-8 bg-gray-50 dark:bg-black min-h-screen text-black dark:text-white transition-colors duration-200">
 
-      {/* Stats */}
-      <div>
-        <h1 className="text-3xl font-bold text-black dark:text-white mb-6">CRM Dashboard</h1>
-        {loading ? (
-          <div className="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-4 h-32">
-            {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="bg-gray-200 dark:bg-white/5 rounded-2xl" />)}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard icon={<User />}       label="Total Donors"      value={stats?.total    ?? 0} />
-            <StatCard icon={<Clock />}       label="Unverified"        value={stats?.pending  ?? 0} href="/?status=pending" />
-            <StatCard icon={<FileText />}    label="Verified"          value={stats?.verified ?? 0} href="/?status=verified" />
-            <StatCard icon={<CheckCircle />} label="Accepted"          value={stats?.approved ?? 0} href="/?status=approved" />
-            <StatCard icon={<Heart />}       label="Donation Complete" value={stats?.donated  ?? 0} href="/?status=donated" />
-            <StatCard icon={<Droplet />}     label="Issued"            value={stats?.issued   ?? 0} href="/?status=issued" />
-            <StatCard icon={<XCircle />}     label="Rejected"          value={stats?.rejected ?? 0} href="/?status=rejected" />
-            <StatCard icon={<Activity />}    label="Today's Activity"  value={stats?.today    ?? 0} />
-          </div>
-        )}
-      </div>
-
       {/* Table */}
       <DonorTable
         donors={donors}

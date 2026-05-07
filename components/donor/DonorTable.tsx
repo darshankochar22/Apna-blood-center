@@ -384,16 +384,16 @@ export function DonorTable({
                         : "-"}
                     </td>
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center">
                         <button
                           onClick={() => onRestore(donor.id)}
-                          className="px-3 py-1.5 text-xs font-bold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-lg transition-colors flex items-center gap-1"
+                          className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1"
                         >
                           <RotateCcw className="w-3 h-3" /> Restore
                         </button>
                         <button
                           onClick={() => onPermanentDelete(donor.id)}
-                          className="px-3 py-1.5 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1"
+                          className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1"
                         >
                           <Trash2 className="w-3 h-3" /> Delete
                         </button>
@@ -438,19 +438,16 @@ export function DonorTable({
                         : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={e => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={e => e.stopPropagation()}>
                       <button
                         onClick={() => onDownloadCert(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-amber-500 border border-amber-200 dark:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FileText className="w-3 h-3" /> Download Certificate
                       </button>
                       <button
                         onClick={e => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" /> Discard
                       </button>
@@ -491,37 +488,34 @@ export function DonorTable({
                       : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-blue-500 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Eye className="w-3 h-3" /> View
                       </button>
                       <button
                         onClick={() => onIssueSlip(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FileText className="w-3 h-3" /> Issue
                       </button>
                       <button
                         onClick={() => onDownloadCert(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-amber-500 border border-amber-200 dark:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FileText className="w-3 h-3" /> Certificate
                       </button>
                       <button
                         onClick={() => onDownloadTestReport(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-purple-500 border border-purple-200 dark:border-purple-500/30 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FlaskConical className="w-3 h-3" /> Test Report
                       </button>
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" /> Discard
                       </button>
@@ -566,31 +560,28 @@ export function DonorTable({
                       : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-blue-500 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Eye className="w-3 h-3" /> View
                       </button>
                       <button
                         onClick={() => onTestResults(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-purple-500 border border-purple-200 dark:border-purple-500/30 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FlaskConical className="w-3 h-3" /> Test Results
                       </button>
                       <button
                         onClick={() => onDownloadCert(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-amber-500 border border-amber-200 dark:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <FileText className="w-3 h-3" /> Certificate
                       </button>
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" /> Discard
                       </button>
@@ -635,27 +626,24 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-blue-500 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Eye className="w-3 h-3" /> View
                       </button>
                       <button
                         onClick={() => onAcceptedProcess(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-white bg-white/10 border border-white/20 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Stethoscope className="w-3 h-3" /> Process
                       </button>
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="w-3 h-3" /> Discard
                       </button>
                     </div>
                   </td>
@@ -700,25 +688,22 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-blue-500 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Eye className="w-3 h-3" /> View
                       </button>
                       <button
                         onClick={() => onProcess(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-white bg-white/10 border border-white/20 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Stethoscope className="w-3 h-3" /> Process
                       </button>
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -770,19 +755,16 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div
-                      className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
-                        className="px-3 py-1.5 text-xs font-bold text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <CheckCircle className="w-3 h-3" /> Verify
                       </button>
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-red-500 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" /> Delete
                       </button>
@@ -832,14 +814,14 @@ export function DonorTable({
                   </td>
                   <td className="px-5 py-4">
                     <div
-                      className="flex items-center gap-2"
+                      className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {statusFilter === "birthdays" && (
                         <button
                           onClick={(e) => onSendBirthday(e, donor.id)}
                           disabled={sendingEmailId === donor.id}
-                          className="px-3 py-1.5 text-xs font-bold text-pink-500 border border-pink-200 dark:border-pink-500/30 hover:bg-pink-50 dark:hover:bg-pink-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap disabled:opacity-40"
+                          className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap disabled:opacity-40"
                         >
                           <Mail className="w-3 h-3" />
                           {sendingEmailId === donor.id
@@ -851,7 +833,7 @@ export function DonorTable({
                         <button
                           onClick={(e) => onSendAnniversary(e, donor.id)}
                           disabled={sendingAnnivEmailId === donor.id}
-                          className="px-3 py-1.5 text-xs font-bold text-purple-500 border border-purple-200 dark:border-purple-500/30 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap disabled:opacity-40"
+                          className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap disabled:opacity-40"
                         >
                           <Mail className="w-3 h-3" />
                           {sendingAnnivEmailId === donor.id
@@ -861,9 +843,9 @@ export function DonorTable({
                       )}
                       <button
                         onClick={(e) => onDelete(e, donor.id)}
-                        className="p-1.5 text-gray-400 dark:text-white/20 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10"
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3" /> Discard
                       </button>
                     </div>
                   </td>

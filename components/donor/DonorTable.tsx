@@ -384,7 +384,7 @@ export function DonorTable({
                         : "-"}
                     </td>
                     <td className="px-5 py-4">
-                      <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center">
+                      <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => onRestore(donor.id)}
                           className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1"
@@ -438,7 +438,7 @@ export function DonorTable({
                         : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
                       <button
                         onClick={() => onDownloadCert(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -488,7 +488,7 @@ export function DonorTable({
                       : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -560,7 +560,7 @@ export function DonorTable({
                       : "—"}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -626,7 +626,7 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -688,7 +688,7 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -755,7 +755,7 @@ export function DonorTable({
                     {donor.total_donations ?? 0}
                   </td>
                   <td className="px-3 py-3.5">
-                    <div className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onRowClick(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/90 border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -814,7 +814,7 @@ export function DonorTable({
                   </td>
                   <td className="px-5 py-4">
                     <div
-                      className="flex flex-col gap-2 min-w-[170px] [&>button]:w-full [&>button]:justify-center"
+                      className="flex items-center gap-1.5"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {statusFilter === "birthdays" && (

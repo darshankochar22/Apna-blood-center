@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import type { Donor, DonorFormData } from "@/types/donor";
+import type { Receipt, ReceiptCreateInput } from "@/types/receipt";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "https://dummy.supabase.co";
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "dummy_key";
@@ -41,15 +42,15 @@ export async function insertDonor(
     const db = getAdminClient();
     const donor_code = await generateDonorCode(db);
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
         ...formData,
         donor_code,
         source,
         status: "pending",
     };
 
-    if (payload.date_of_wedding === "") {
-        payload.date_of_wedding = null;
+    if (payload["date_of_wedding"] === "") {
+        payload["date_of_wedding"] = null;
     }
 
     const { data, error } = await db
@@ -194,5 +195,36 @@ export async function updateDonor(id: string, updates: Partial<Donor>): Promise<
     
     if (error) throw new Error(error.message);
     return data as Donor;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Receipts
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function insertReceipt(input: ReceiptCreateInput): Promise<Receipt> {
+  const db = getAdminClient();
+  const payload: Record<string, unknown> = {
+    ...input,
+    amount_paid:
+      Number(input.actual_charges || 0) - Number(input.discount_amount || 0),
+  };
+
+  const { data, error } = await db
+    .from("receipts")
+    .insert(payload)
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as Receipt;
+}
+
+export async function getReceipts(): Promise<Receipt[]> {
+  const db = getAdminClient();
+  const { data, error } = await db
+    .from("receipts")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Receipt[];
 }
 

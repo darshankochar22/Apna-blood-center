@@ -9,6 +9,7 @@ import { ThemeToggle } from "./ThemeToggle";
 const navItem = [
     { label: "Dashboard",          href: "/" },
     { label: "New Form (QR)",      href: "/qr" },
+    { label: "Receipts",           href: "/receipts" },
     { label: "Unverified",         href: "/?status=pending" },
     { label: "Verified",           href: "/?status=verified" },
     { label: "Accepted",           href: "/?status=approved" },

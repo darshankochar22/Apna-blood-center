@@ -3,31 +3,60 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Plus, Printer } from "lucide-react";
-import { createReceiptAction, fetchReceiptsAction } from "@/app/actions";
+import { createReceiptAction, fetchDonorsAction, fetchReceiptsAction } from "@/app/actions";
 import type { Receipt, ReceiptCreateInput } from "@/types/receipt";
+import type { Donor } from "@/types/donor";
 import { ReceiptFormModal } from "./ReceiptFormModal";
 import { downloadReceipt } from "@/lib/downloadReceipt";
+import { useSearchParams } from "next/navigation";
 
 export default function ReceiptsClient() {
   const [receipts, setReceipts] = useState<Receipt[]>([]);
+  const [existingPatients, setExistingPatients] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreate, setShowCreate] = useState(false);
   const [error, setError] = useState("");
+
+  const searchParams = useSearchParams();
+  const selectedPatientIdFromQuery = searchParams.get("selectedPatientId");
+
+  const [showCreate, setShowCreate] = useState(() =>
+    Boolean(selectedPatientIdFromQuery),
+  );
 
   const load = async () => {
     setLoading(true);
-    const res = await fetchReceiptsAction();
-    if (res.success && res.data) {
-      setReceipts(res.data as Receipt[]);
+    const [receiptsRes, donorsRes] = await Promise.all([
+      fetchReceiptsAction(),
+      fetchDonorsAction(),
+    ]);
+    if (receiptsRes.success && receiptsRes.data) {
+      setReceipts(receiptsRes.data as Receipt[]);
       setError("");
     } else {
-      setError(res.error || "Failed to load receipts");
+      setError(receiptsRes.error || "Failed to load receipts");
     }
+
+    if (donorsRes.success && donorsRes.data) {
+      const donors = donorsRes.data as Donor[];
+      // Use completed issue records as "existing patient" sources
+      const patients = donors.filter(
+        (d) =>
+          d.status === "completed" &&
+          !!d.patient_name &&
+          !!d.blood_group &&
+          !!d.hospital,
+      );
+      setExistingPatients(patients);
+    }
+
     setLoading(false);
   };
 
   useEffect(() => {
-    load();
+    // Start async work after the effect body (avoids cascading-render lint warning).
+    Promise.resolve().then(() => {
+      void load();
+    });
   }, []);
 
   const rows = useMemo(() => receipts, [receipts]);
@@ -55,7 +84,13 @@ export default function ReceiptsClient() {
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            className="px-4 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm flex items-center gap-2 hover:opacity-90 transition"
+            className="px-4 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm flex items-center gap-2 hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed"
+            disabled={loading || existingPatients.length === 0}
+            title={
+              loading || existingPatients.length === 0
+                ? "Create is available from Issued Records only."
+                : undefined
+            }
           >
             <Plus className="w-4 h-4" /> Create New Receipt
           </button>
@@ -126,6 +161,8 @@ export default function ReceiptsClient() {
         <ReceiptFormModal
           onClose={() => setShowCreate(false)}
           onCreate={handleCreate}
+          existingPatients={existingPatients}
+          initialSelectedPatientId={selectedPatientIdFromQuery}
         />
       )}
     </div>

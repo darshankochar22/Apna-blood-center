@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { X, Printer, Save } from "lucide-react";
 import { Field, Input, Select } from "@/components/Formelements";
 import type { Receipt, ReceiptCreateInput } from "@/types/receipt";
 import { downloadReceipt } from "@/lib/downloadReceipt";
+import type { Donor } from "@/types/donor";
 
 const COMPONENT_OPTIONS = [
   { value: "PRBC", label: "PRBC" },
@@ -24,9 +25,13 @@ function combineDateTimeLocal(date: string, time: string) {
 export function ReceiptFormModal({
   onClose,
   onCreate,
+  existingPatients,
+  initialSelectedPatientId,
 }: {
   onClose: () => void;
   onCreate: (input: ReceiptCreateInput) => Promise<Receipt | null>;
+  existingPatients?: Donor[];
+  initialSelectedPatientId?: string | null;
 }) {
   const now = useMemo(() => new Date(), []);
   const [receiptNo, setReceiptNo] = useState("");
@@ -42,6 +47,8 @@ export function ReceiptFormModal({
   const [bagId, setBagId] = useState("");
   const [components, setComponents] = useState("PRBC");
   const [unit, setUnit] = useState("01");
+
+  const [selectedPatientId, setSelectedPatientId] = useState("");
 
   const [processingCharges, setProcessingCharges] = useState("0");
   const [actualCharges, setActualCharges] = useState("");
@@ -98,6 +105,84 @@ export function ReceiptFormModal({
     onClose();
   };
 
+  const mapDonationTypeToComponent = (type?: string | null) => {
+    const t = (type || "").toLowerCase();
+    if (t.includes("sdp") || t.includes("platelet")) return "SDP";
+    if (t.includes("ffp") || t.includes("plasma")) return "FFP";
+    if (t.includes("whole blood")) return "Whole Blood";
+    if (t.includes("pc")) return "PC";
+    if (t.includes("prbc")) return "PRBC";
+    return "";
+  };
+
+  const handleSelectExistingPatient = useCallback(
+    (donorId: string) => {
+      setSelectedPatientId(donorId);
+      if (!donorId) return;
+      const p = existingPatients?.find((d) => d.id === donorId);
+      if (!p) return;
+
+      // Fill only missing values (keeps user edits intact)
+      if (!receiverName.trim() && p.attender_name)
+        setReceiverName(String(p.attender_name));
+      if (!patientName.trim() && p.patient_name)
+        setPatientName(String(p.patient_name));
+      if (!bloodGroup.trim() && p.blood_group)
+        setBloodGroup(String(p.blood_group));
+      if (!hospitalName.trim() && p.hospital)
+        setHospitalName(String(p.hospital));
+      if (!issueNo.trim() && p.segment_no)
+        setIssueNo(String(p.segment_no));
+      if (!bagId.trim() && p.blood_bag_no) setBagId(String(p.blood_bag_no));
+      if (!unit.trim() && p.unit_no) setUnit(String(p.unit_no));
+
+      const mappedComponent = mapDonationTypeToComponent(p.type_of_donation);
+      if (
+        mappedComponent &&
+        (!components.trim() || components === "PRBC" || components === "PC")
+      ) {
+        setComponents(mappedComponent);
+      }
+
+      // Prefill charges if user hasn't typed anything yet
+      if (!actualCharges.trim() && p.amount_received != null) {
+        const n = Number(p.amount_received);
+        if (!Number.isNaN(n)) {
+          setProcessingCharges(String(n));
+          setActualCharges(String(n));
+        }
+      }
+    },
+    [
+      actualCharges,
+      bagId,
+      bloodGroup,
+      components,
+      existingPatients,
+      hospitalName,
+      issueNo,
+      patientName,
+      receiverName,
+      unit,
+    ],
+  );
+
+  // If user navigated here with a selected patient, pre-select and fill missing fields.
+  useEffect(() => {
+    if (!initialSelectedPatientId) return;
+    if (!existingPatients || existingPatients.length === 0) return;
+    if (initialSelectedPatientId === selectedPatientId) return;
+    // Run selection in a microtask to avoid "setState inside effect" warnings.
+    Promise.resolve().then(() => {
+      handleSelectExistingPatient(initialSelectedPatientId);
+    });
+  }, [
+    initialSelectedPatientId,
+    existingPatients,
+    selectedPatientId,
+    handleSelectExistingPatient,
+  ]);
+
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={onClose}>
       <div
@@ -125,6 +210,25 @@ export function ReceiptFormModal({
             <Field label="Receipt Time" required>
               <Input type="time" value={receiptTime} onChange={(e) => setReceiptTime(e.target.value)} />
             </Field>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Existing Patient (optional)">
+              <Select
+                value={selectedPatientId}
+                onChange={(e) => handleSelectExistingPatient(e.target.value)}
+                options={[
+                  { value: "", label: "New / Not existing" },
+                  ...(existingPatients?.map((p) => ({
+                    value: p.id,
+                    label: `${p.patient_name || "Patient"} • ${p.blood_group || "-"} • ${
+                      p.hospital || "-"
+                    } • Bag ${p.blood_bag_no || "-"}`,
+                  })) ?? []),
+                ]}
+              />
+            </Field>
+            <div />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

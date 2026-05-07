@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Donor, DonorStatus } from "@/types/donor";
 import {
   fetchDonorsAction, updateDonorAction, fetchStatsAction,
@@ -22,6 +22,7 @@ import { downloadIssueSlip } from "@/lib/downloadIssueSlip";
 
 export default function DonorDashboardClient() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const statusFilter = searchParams.get("status");
   const isBinTab = statusFilter === "bin";
 
@@ -146,6 +147,10 @@ export default function DonorDashboardClient() {
     else alert("Error: " + res.error);
   }
 
+  const handleCreateReceipt = (donor: Donor) => {
+    router.push(`/receipts?selectedPatientId=${encodeURIComponent(donor.id)}`);
+  };
+
   async function handlePermanentDelete(id: string) {
     if (!confirm("Permanently delete this record? This cannot be undone.")) return;
     const res = await permanentDeleteDonorAction(id);
@@ -235,6 +240,7 @@ export default function DonorDashboardClient() {
         onSendAnniversary={handleSendAnniversary}
         onIssueSlip={setIssueModalDonor}
         onDownloadTestReport={downloadTestReport}
+        onCreateReceipt={handleCreateReceipt}
       />
 
       {/* Detail Modal */}

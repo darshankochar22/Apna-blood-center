@@ -12,6 +12,7 @@ import {
   FlaskConical,
   FileText,
   Mail,
+  Printer,
 } from "lucide-react";
 import { Donor } from "@/types/donor";
 import { BLOOD_GROUPS } from "@/types/donor";
@@ -45,6 +46,7 @@ interface DonorTableProps {
   onSendAnniversary: (e: React.MouseEvent, id: string) => void;
   onIssueSlip: (donor: Donor) => void;
   onDownloadTestReport: (donor: Donor) => void;
+  onCreateReceipt: (donor: Donor) => void;
 }
 
 const PER_PAGE_OPTIONS = [10, 25, 50, 100];
@@ -74,6 +76,7 @@ export function DonorTable({
   onSendAnniversary,
   onIssueSlip,
   onDownloadTestReport,
+  onCreateReceipt,
   onRestore,
   onPermanentDelete,
 }: DonorTableProps) {
@@ -439,6 +442,12 @@ export function DonorTable({
                   </td>
                   <td className="px-3 py-3.5">
                     <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
+                      <button
+                        onClick={() => onCreateReceipt(donor)}
+                        className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"
+                      >
+                        <Printer className="w-3 h-3" /> Create Receipt
+                      </button>
                       <button
                         onClick={() => onDownloadCert(donor)}
                         className="px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-white/80 border border-gray-300 dark:border-white/15 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap"

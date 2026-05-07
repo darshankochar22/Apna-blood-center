@@ -62,7 +62,9 @@ export function TestResultsModal({ donor, onClose, onSubmit }: TestResultsModalP
   const [hcv, setHcv]         = useState<ReactiveState>(donor.test_hcv == null ? null : donor.test_hcv ? "reactive" : "non-reactive");
   const [vdrl, setVdrl]       = useState<ReactiveState>(donor.test_vdrl == null ? null : donor.test_vdrl ? "reactive" : "non-reactive");
   const [malaria, setMalaria] = useState<ReactiveState>(donor.test_malaria == null ? null : donor.test_malaria ? "reactive" : "non-reactive");
-  const [testDate, setTestDate] = useState("");
+  const [testDate, setTestDate] = useState(
+    donor.tested_at ? donor.tested_at.slice(0, 16) : ""
+  );
   const [saving, setSaving]   = useState(false);
   const [error, setError]     = useState("");
 
@@ -80,7 +82,7 @@ export function TestResultsModal({ donor, onClose, onSubmit }: TestResultsModalP
       test_hcv:      hcv      === "reactive",
       test_vdrl:     vdrl     === "reactive",
       test_malaria:  malaria  === "reactive",
-      donation_time: testDate || undefined,
+      tested_at: testDate || null,
     });
     setSaving(false);
   };

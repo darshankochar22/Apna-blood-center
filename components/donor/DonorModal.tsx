@@ -60,6 +60,14 @@ function DonorInfoSections({ donor }: { donor: Donor }) {
         <Section title="Verification Details">
           <InfoItem label="Donor Type"    value={donor.type_of_donor    || "-"} />
           <InfoItem label="Donation Type" value={donor.type_of_donation || "-"} />
+          <InfoItem
+            label="Verified At"
+            value={donor.verified_at ? format(new Date(donor.verified_at), "dd MMM yyyy, hh:mm a") : "-"}
+          />
+          <InfoItem
+            label="Processed At"
+            value={donor.processed_at ? format(new Date(donor.processed_at), "dd MMM yyyy, hh:mm a") : "-"}
+          />
           <InfoItem label="Donation Time" value={donor.donation_time ? format(new Date(donor.donation_time), "dd MMM yyyy, hh:mm a") : "-"} />
         </Section>
       )}
@@ -87,6 +95,10 @@ function DonorInfoSections({ donor }: { donor: Donor }) {
       {showLabTests && (
         <Section title="Lab Test Results">
           <InfoItem label="Test Method" value={donor.test_method || "-"} />
+          <InfoItem
+            label="Tested At"
+            value={donor.tested_at ? format(new Date(donor.tested_at), "dd MMM yyyy, hh:mm a") : "-"}
+          />
           <TestResult label="HIV"                 value={donor.test_hiv} />
           <TestResult label="HBsAg (Hepatitis B)" value={donor.test_hbsag} />
           <TestResult label="HCV (Hepatitis C)"   value={donor.test_hcv} />

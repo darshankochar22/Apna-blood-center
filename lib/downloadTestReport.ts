@@ -5,7 +5,9 @@ const REACTION = (val: boolean | null | undefined) =>
   val === true ? "Reactive" : val === false ? "Non-Reactive" : "—";
 
 export function downloadTestReport(donor: Donor) {
-  const testedOn = donor.donation_time
+  const testedOn = donor.tested_at
+    ? format(new Date(donor.tested_at), "dd MMMM yyyy")
+    : donor.donation_time
     ? format(new Date(donor.donation_time), "dd MMMM yyyy")
     : format(new Date(donor.created_at || ""), "dd MMMM yyyy");
 

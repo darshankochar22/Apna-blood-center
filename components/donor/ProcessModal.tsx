@@ -24,6 +24,9 @@ export function ProcessModal({ donor, onClose, onSubmit }: ProcessModalProps) {
   const [height, setHeight]   = useState("");
   const [bg, setBg]           = useState<BloodGroup | "">(donor.blood_group || "");
   const [remark, setRemark]   = useState("");
+  const [processedAt, setProcessedAt] = useState(
+    donor.processed_at ? donor.processed_at.slice(0, 16) : ""
+  );
   const [decision, setDecision] = useState<"approved" | "rejected" | "">("");
   const [saving, setSaving]   = useState(false);
   const [error, setError]     = useState("");
@@ -42,6 +45,7 @@ export function ProcessModal({ donor, onClose, onSubmit }: ProcessModalProps) {
       height:        Number(height) || null,
       blood_group:   (bg as BloodGroup) || donor.blood_group,
       remark:        remark         || null,
+      processed_at:  processedAt    || null,
     });
     setSaving(false);
   };
@@ -100,6 +104,16 @@ export function ProcessModal({ donor, onClose, onSubmit }: ProcessModalProps) {
             <div className="col-span-2">
               <Field label="Remark (optional)">
                 <Input value={remark} onChange={e => setRemark(e.target.value)} placeholder="Any notes for this evaluation" className="bg-[#1a1a1a] text-white" />
+              </Field>
+            </div>
+            <div className="col-span-2">
+              <Field label="Custom Processed Date & Time (optional)">
+                <Input
+                  type="datetime-local"
+                  value={processedAt}
+                  onChange={e => setProcessedAt(e.target.value)}
+                  className="bg-[#1a1a1a] text-white"
+                />
               </Field>
             </div>
           </div>

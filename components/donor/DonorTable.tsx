@@ -483,7 +483,9 @@ export function DonorTable({
                     {donor.type_of_donation || "—"}
                   </td>
                   <td className="px-3 py-3.5 text-gray-500 dark:text-white/40 text-xs">
-                    {donor.donation_time
+                    {donor.tested_at
+                      ? format(new Date(donor.tested_at), "dd MMM yyyy")
+                      : donor.donation_time
                       ? format(new Date(donor.donation_time), "dd MMM yyyy")
                       : "—"}
                   </td>

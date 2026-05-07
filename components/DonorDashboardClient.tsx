@@ -45,6 +45,12 @@ export default function DonorDashboardClient() {
   useEffect(() => { loadData(); }, []);
   useEffect(() => { if (isBinTab) loadBin(); }, [isBinTab]);
 
+  const toDbTimestamp = (value?: string | null) => {
+    if (!value) return new Date().toISOString();
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+  };
+
   async function loadData() {
     setLoading(true);
     const [donorsRes, statsRes] = await Promise.all([fetchDonorsAction(), fetchStatsAction()]);
@@ -59,7 +65,11 @@ export default function DonorDashboardClient() {
   }
 
   async function handleStatusUpdate(id: string, newStatus: DonorStatus, extra: Partial<Donor> = {}) {
-    const res = await updateDonorAction(id, { status: newStatus, ...extra });
+    const payload: Partial<Donor> = { status: newStatus, ...extra };
+    if (newStatus === "verified" && !payload.verified_at) {
+      payload.verified_at = new Date().toISOString();
+    }
+    const res = await updateDonorAction(id, payload);
     if (res.success && res.data) {
       setDonors(prev => prev.map(d => d.id === id ? res.data! : d));
       setSelectedDonor(res.data ?? null);
@@ -74,30 +84,44 @@ export default function DonorDashboardClient() {
     decision: "approved" | "rejected",
     data: Partial<Donor>
   ) {
-    const res = await updateDonorAction(id, { status: decision, ...data });
+    const res = await updateDonorAction(id, {
+      status: decision,
+      ...data,
+      processed_at: toDbTimestamp(data.processed_at),
+    });
     if (res.success) { setProcessDonor(null); loadData(); }
     else alert("Error: " + res.error);
   }
 
   async function handleAcceptedProcess(id: string, data: Partial<Donor>) {
-    const res = await updateDonorAction(id, { status: "donated", ...data });
+    const res = await updateDonorAction(id, {
+      status: "donated",
+      ...data,
+      donation_time: toDbTimestamp(data.donation_time),
+    });
     if (res.success) { setAcceptedProcessDonor(null); loadData(); }
     else alert("Error: " + res.error);
   }
 
   async function handleTestResults(id: string, data: Partial<Donor>) {
-    const res = await updateDonorAction(id, { status: "issued", ...data });
+    const res = await updateDonorAction(id, {
+      status: "issued",
+      ...data,
+      tested_at: toDbTimestamp(data.tested_at),
+    });
     if (res.success) { setTestResultsDonor(null); loadData(); }
     else alert("Error: " + res.error);
   }
 
   async function handleIssueSubmit(id: string, data: Partial<Donor>, formData: IssueFormData) {
-    const res = await updateDonorAction(id, { status: "completed", ...data });
+    const issuedAt = data.issued_at ? toDbTimestamp(data.issued_at) : new Date().toISOString();
+    const res = await updateDonorAction(id, { status: "completed", ...data, issued_at: issuedAt });
     if (res.success) {
-      const updatedDonor = { ...(issueModalDonor as Donor), status: "completed" as DonorStatus, ...data };
+      const updatedDonor = { ...(issueModalDonor as Donor), status: "completed" as DonorStatus, issued_at: issuedAt, ...data };
+      const updatedFormData = { ...formData, issued_at: issuedAt };
       setIssueModalDonor(null);
       loadData();
-      downloadIssueSlip(updatedDonor, formData);
+      downloadIssueSlip(updatedDonor, updatedFormData);
     } else {
       alert("Error saving issue record: " + res.error);
     }

@@ -48,6 +48,8 @@ export interface Donor extends DonorFormData{
     // Verification
     type_of_donor?: string | null;
     type_of_donation?: string | null;
+    verified_at?: string | null;
+    processed_at?: string | null;
     donation_time?: string | null;
 
     // Pre-checkup
@@ -65,6 +67,7 @@ export interface Donor extends DonorFormData{
 
     // Test Reports
     test_method?: string | null;
+    tested_at?: string | null;
     test_hiv?: boolean | null;
     test_hbsag?: boolean | null;
     test_hcv?: boolean | null;
